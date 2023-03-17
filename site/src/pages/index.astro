@@ -3,5 +3,11 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-	hello
+	<div id="result"></div>
+
+	<script type="module">
+		import { dosePerPortion } from "./js/carbwire.js";
+		const element = document.getElementById("result");
+		element.append(dosePerPortion(32.3, 100, 90, 200, 100, 5));
+	</script>
 </Layout>
