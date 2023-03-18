@@ -1,41 +1,31 @@
-function carbsPerCookedGram(carbs, reference) {
-  return carbs / reference;
+function carbsPerCookedGram(data) {
+  return data.carbs / data.reference;
 }
 
-function cookedRatio(cookedWeight, dryWeight) {
-  return cookedWeight / dryWeight;
+function cookedRatio(data) {
+  return data.cookedWeight / data.dryWeight;
 }
 
-export function carbsPerDryGram(carbs, reference, dryWeight, cookedWeight) {
+export function carbsPerDryGram(data) {
   return (
-    carbsPerCookedGram(carbs, reference) * cookedRatio(cookedWeight, dryWeight)
+    carbsPerCookedGram(data) *
+    cookedRatio(data)
   );
 }
 
-export function carbsPerPortion(
-  carbs,
-  reference,
-  dryWeight,
-  cookedWeight,
-  dryPortion
-) {
-  return Number(
-    (
-      carbsPerDryGram(carbs, reference, dryWeight, cookedWeight) * dryPortion
-    ).toFixed(1)
-  );
+export function carbsPerPortion(data) {
+  return Number((carbsPerDryGram(data) * data.dryPortion).toFixed(1));
 }
 
-export function dosePerPortion(
-  carbs,
-  reference,
-  dryWeight,
-  cookedWeight,
-  dryPortion,
-  antecedent
-) {
-  return Math.round(
-    carbsPerPortion(carbs, reference, dryWeight, cookedWeight, dryPortion) /
-      antecedent
-  );
+export function dosePerPortion(data) {
+  return Math.round(carbsPerPortion(data) / data.ratio);
 }
+
+export const fields = {
+  carbs: "carbs for reference amount",
+  reference: "reference amount for the carbs",
+  dryWeight: "dry weight for the dry / cooked ratio",
+  cookedWeight: "cooked weight for the dry / cooked ratio",
+  dryPortion: "the weight of your dry portion",
+  ratio: "the antecedent of your insulin ratio",
+};
