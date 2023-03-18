@@ -1,13 +1,69 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const fields = [
+	"carbs",
+	"reference",
+	"dryWeight",
+	"cookedWeight",
+	"dryPortion",
+	"ratio",
+];
 ---
 
 <Layout>
+	<h1>I AM NOT A DOCTOR. THIS IS NOT MEDICAL ADVICE. FOR ENTERTAINMENT PURPOSES ONLY!</h1>
+	<form id="form">
+		<dl>
+			{
+				fields.map((field) => (
+					<>
+						<dt>{field}</dt>
+						<dd>
+							<input type="number" name={field} value="0" />
+						</dd>
+					</>
+				))
+			}
+		</dl>
+		<button type="submit">Submit form</button>
+	</form>
+
 	<div id="result"></div>
 
-	<script type="module">
-		import { dosePerPortion } from "./js/carbwire.js";
-		const element = document.getElementById("result");
-		element.append(dosePerPortion(32.3, 100, 90, 200, 100, 5));
+	<script type="module" is:inline define:vars={{ fields: fields }}>
+		import { dosePerPortion } from "/js/carbwire.js";
+
+		const form = document.getElementById("form");
+		form.addEventListener("submit", function (event) {
+			event.preventDefault();
+
+			var result = document.getElementById("result");
+			result.innerHTML = "";
+			result.append(
+				"Insulin: " +
+					dosePerPortion(
+						event.target.carbs.value,
+						event.target.reference.value,
+						event.target.dryWeight.value,
+						event.target.cookedWeight.value,
+						event.target.dryPortion.value,
+						event.target.ratio.value
+					) +
+					" units"
+			);
+		});
 	</script>
 </Layout>
+
+<style>
+	dl {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		width: 20%;
+	}
+
+	button {
+		margin-inline: auto;
+	}
+</style>
