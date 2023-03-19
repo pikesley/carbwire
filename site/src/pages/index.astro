@@ -1,69 +1,69 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { fields } from "../../public/js/carbwire";
 
-const fields = [
-	"carbs",
-	"reference",
-	"dryWeight",
-	"cookedWeight",
-	"dryPortion",
-	"ratio",
-];
+function buildForm(data) {
+  var s = "";
+  for (var key in data) {
+    s += "<dt>";
+    s += key;
+    s += "</dt>";
+    s += "<dd>";
+    s += '<input type="number" value="0" name="';
+    s += key;
+    s += '">';
+    s += "</dd>";
+  }
+
+  return s;
+}
 ---
 
 <Layout>
-	<h1>I AM NOT A DOCTOR. THIS IS NOT MEDICAL ADVICE. FOR ENTERTAINMENT PURPOSES ONLY!</h1>
-	<form id="form">
-		<dl>
-			{
-				fields.map((field) => (
-					<>
-						<dt>{field}</dt>
-						<dd>
-							<input type="number" name={field} value="0" />
-						</dd>
-					</>
-				))
-			}
-		</dl>
-		<button type="submit">Submit form</button>
-	</form>
+  <h1>
+    I AM NOT A DOCTOR. THIS IS NOT MEDICAL ADVICE. FOR ENTERTAINMENT PURPOSES
+    ONLY!!!
+  </h1>
+  <form id="form">
+    <dl set:html={buildForm(fields)} />
+    <button type="submit">Submit form</button>
+  </form>
 
-	<div id="result"></div>
+  <div id="result"></div>
 
-	<script type="module" is:inline define:vars={{ fields: fields }}>
-		import { dosePerPortion } from "/js/carbwire.js";
+  <script type="module" is:inline define:vars={{ fields: fields }}>
+    import { dosePerPortion } from "/js/carbwire.js";
 
-		const form = document.getElementById("form");
-		form.addEventListener("submit", function (event) {
-			event.preventDefault();
+    const form = document.getElementById("form");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
 
-			var result = document.getElementById("result");
-			result.innerHTML = "";
-			result.append(
-				"Insulin: " +
-					dosePerPortion(
-						event.target.carbs.value,
-						event.target.reference.value,
-						event.target.dryWeight.value,
-						event.target.cookedWeight.value,
-						event.target.dryPortion.value,
-						event.target.ratio.value
-					) +
-					" units"
-			);
-		});
-	</script>
+      var result = document.getElementById("result");
+      result.innerHTML = "";
+
+      result.append(
+        "Insulin: " + dosePerPortion(asObject(event.target)) + " units"
+      );
+    });
+
+    function asObject(target) {
+      const refinedData = {};
+      for (var i = 0; i < event.target.length - 1; i++) {
+        refinedData[target[i].name] = target[i].value;
+      }
+      return refinedData;
+    }
+  </script>
 </Layout>
 
 <style>
-	dl {
-		display: grid;
-		grid-template-columns: 2fr 1fr;
-		width: 20%;
-	}
+  dl {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    width: 20%;
+  }
 
-	button {
-		margin-inline: auto;
-	}
+  button {
+    margin-inline: auto;
+  }
 </style>

@@ -1,21 +1,28 @@
 import { carbsPerDryGram, carbsPerPortion, dosePerPortion } from "carbwire";
 
+const data = {
+  carbs: 32.2,
+  reference: 100,
+  dryWeight: 90,
+  cookedWeight: 200,
+  dryPortion: 100,
+  ratio: 5,
+};
+
 describe("carbsPerDryGram", function () {
   it("does the reference case", function () {
-    expect(Number(carbsPerDryGram(32.3, 100, 90, 200).toFixed(3))).toEqual(
-      0.718
-    );
+    expect(Number(carbsPerDryGram(data).toFixed(3))).toEqual(0.716);
   });
 });
 
 describe("carbsPerPortion", function () {
   it("does the reference case", function () {
-    expect(carbsPerPortion(32.3, 100, 90, 200, 150)).toEqual(107.7);
+    expect(carbsPerPortion(data)).toEqual(71.6);
   });
 });
 
 describe("dosePerPortion", function () {
   it("does the reference case", function () {
-    expect(dosePerPortion(32.3, 100, 90, 200, 200, 5)).toEqual(29);
+    expect(dosePerPortion(data)).toEqual(14);
   });
 });
