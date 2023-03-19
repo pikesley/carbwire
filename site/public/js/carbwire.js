@@ -7,10 +7,7 @@ function cookedRatio(data) {
 }
 
 export function carbsPerDryGram(data) {
-  return (
-    carbsPerCookedGram(data) *
-    cookedRatio(data)
-  );
+  return carbsPerCookedGram(data) * cookedRatio(data);
 }
 
 export function carbsPerPortion(data) {

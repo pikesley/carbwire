@@ -1,34 +1,31 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { fields } from "../../public/js/carbwire";
 
-const fields = [
-  "carbs",
-  "reference",
-  "dryWeight",
-  "cookedWeight",
-  "dryPortion",
-  "ratio",
-];
+function buildForm(data) {
+  var s = "";
+  for (var key in data) {
+    s += "<dt>";
+    s += key;
+    s += "</dt>";
+    s += "<dd>";
+    s += '<input type="number" value="0" name="';
+    s += key;
+    s += '">';
+    s += "</dd>";
+  }
+
+  return s;
+}
 ---
 
 <Layout>
   <h1>
     I AM NOT A DOCTOR. THIS IS NOT MEDICAL ADVICE. FOR ENTERTAINMENT PURPOSES
-    ONLY!
+    ONLY!!!
   </h1>
   <form id="form">
-    <dl>
-      {
-        fields.map((field) => (
-          <>
-            <dt>{field}</dt>
-            <dd>
-              <input type="number" name={field} value="0" />
-            </dd>
-          </>
-        ))
-      }
-    </dl>
+    <dl set:html={buildForm(fields)} />
     <button type="submit">Submit form</button>
   </form>
 
@@ -43,19 +40,19 @@ const fields = [
 
       var result = document.getElementById("result");
       result.innerHTML = "";
+
       result.append(
-        "Insulin: " +
-          dosePerPortion(
-            event.target.carbs.value,
-            event.target.reference.value,
-            event.target.dryWeight.value,
-            event.target.cookedWeight.value,
-            event.target.dryPortion.value,
-            event.target.ratio.value
-          ) +
-          " units"
+        "Insulin: " + dosePerPortion(asObject(event.target)) + " units"
       );
     });
+
+    function asObject(target) {
+      const refinedData = {};
+      for (var i = 0; i < event.target.length - 1; i++) {
+        refinedData[target[i].name] = target[i].value;
+      }
+      return refinedData;
+    }
   </script>
 </Layout>
 
