@@ -15,10 +15,22 @@
 </html>
 
 <style is:global>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto');
+  @import url("https://fonts.googleapis.com/css2?family=Roboto");
 
-    body {
-      font-family: "Roboto";
-      margin: 2rem;
-    }
+  :root {
+    --colour-background: rgb(238, 216, 189);
+    --colour-primary: rgb(185, 25, 25);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Roboto";
+    margin: 2rem;
+
+    background-color: var(--colour-background);
+    color: var(--colour-primary);
+  }
 </style>
