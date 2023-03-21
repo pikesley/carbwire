@@ -11,7 +11,7 @@ const foods = await fetch(dataApi).then(function (response) {
 
 <Layout>
   <form id="form">
-    <label for="foods">Choose a food:</label>
+    <label for="foods" id="foodLabel">Food</label>
     <select id="foods" name="foods">
       {
         foods.map((food) => (
@@ -20,20 +20,21 @@ const foods = await fetch(dataApi).then(function (response) {
       }
     </select>
 
-    <label for="dryPortion">Dry portion weight (g)</label>
-    <input type="number" name="dryPortion" />
-    <button type="submit">Submit form</button>
+    <label for="dryPortion" id="portionLabel">Dry weight (g)</label>
+    <input type="number" name="dryPortion" id="dryPortion"/>
+    <button type="submit" id="submit">Submit</button>
   </form>
 
-  <table id="results">
-    <tr>
-      <th>Total carbs (g)</th>
-      <th>Dose (units)</th>
-    </tr><tr>
-      <td id="totalCarbs"></td>
-      <td id="insulinDose"></td>
-    </tr>
-  </table>
+  <dl id="results">
+    <dt>Carbs per <span id="referenceAmount"></span>g:</dt>
+    <dd><span id="carbsPer"></span>g</dd>
+    <dt><span id="dryWeight"></span>g dry yields:</dt>
+    <dd><span id="cookedWeight"></span>g cooked</dd>
+    <dt>Total carbs:</dt>
+    <dd><span id="totalCarbs"></span>g</dd>
+    <dt>Insulin dose:</dt>
+    <dd><span id="insulinDose"></span> units</dd>
+  </dl>
 
   <script type="module" is:inline define:vars={{ ratio: ratio }}>
     import { totalCarbsAndDose } from "/js/carbwire.js";
@@ -43,30 +44,79 @@ const foods = await fetch(dataApi).then(function (response) {
       event.preventDefault();
 
       const data = JSON.parse(event.target[0].value);
+
       data.dryPortion = Number(event.target[1].value);
       data.ratio = ratio;
 
       const result = totalCarbsAndDose(data);
 
-      document.getElementById("totalCarbs").textContent = result.totalCarbs;
+      document.getElementById("referenceAmount").textContent = data.reference
+      document.getElementById("carbsPer").textContent = data.carbs;
+      
+      document.getElementById("dryWeight").textContent = data.dryWeight
+      document.getElementById("cookedWeight").textContent = data.cookedWeight
+
+      document.getElementById("totalCarbs").textContent = result.totalCarbs
       document.getElementById("insulinDose").textContent = result.dose;
-      document.getElementById("results").style.display = "block";
+      
+      document.getElementById("results").style.display = "grid";
     });
   </script>
 </Layout>
 
 <style>
-  dl {
+  form {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    width: 20%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: 
+    "foodLabel foodDropdown foodDropdown"
+    "portionLabel dryPortion submit"
+    ;
+    gap: 1rem;
   }
 
-  button {
-    margin-inline: auto;
+  #foodLabel {
+    grid-area: foodLabel;
   }
 
-  table#results {
+  #foods {
+    grid-area: foodDropdown ;
+  }
+
+  #portionLabel {
+    grid-area: portionLabel;
+  }
+  
+  #dryPortion {
+    grid-area: dryPortion;
+  }
+
+  #submit {
+    grid-area: submit;
+  }
+  
+  select, input {
+    padding: 0.2rem;
+  }
+
+  dl#results {
+    margin-top:3rem;
     display: none;
+
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  dt {
+    text-align: right;
+  }
+
+  dd {
+    text-align: left;
+    margin-inline: 1rem;
+  }
+
+  span#insulinDose {
+    font-weight: bold;
   }
 </style>
