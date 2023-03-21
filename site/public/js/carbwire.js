@@ -14,8 +14,14 @@ export function carbsPerPortion(data) {
   return Number((carbsPerDryGram(data) * data.dryPortion).toFixed(1));
 }
 
-export function dosePerPortion(data) {
-  return Math.round(carbsPerPortion(data) / data.ratio);
+export function totalCarbsAndDose(data) {
+  const totalCarbs = carbsPerPortion(data)
+  const dose = Math.round(totalCarbs / data.ratio);
+
+  return {
+    totalCarbs: totalCarbs,
+    dose: dose
+  }
 }
 
 export const fields = {
