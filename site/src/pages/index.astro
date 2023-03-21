@@ -76,31 +76,34 @@ foods.sort((a, b) => a.name.localeCompare(b.name));
   form {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas: 
-    "foodLabel foodDropdown foodDropdown"
-    "portionLabel dryPortion submit"
-    ;
     gap: 1rem;
+    align-items: center;
   }
 
   #foodLabel {
-    grid-area: foodLabel;
+    grid-column-start: 1;
+    grid-column-end: span 1;
   }
 
   #foods {
-    grid-area: foodDropdown ;
+    grid-column-start: 2;
+    grid-column-end: span 2;
   }
 
   #portionLabel {
-    grid-area: portionLabel;
+    grid-column-start: 1;
+    grid-column-end: span 1;
   }
   
   #dryPortion {
-    grid-area: dryPortion;
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    max-width: 4rem;
   }
 
   #submit {
-    grid-area: submit;
+    grid-column-start: 3;
+    grid-column-end: span 1;
   }
   
   select, input {
@@ -130,5 +133,19 @@ foods.sort((a, b) => a.name.localeCompare(b.name));
 
   span#insulinDose {
     font-weight: bold;
+  }
+
+  select, input , button{
+    background-color: var(--colour-background);
+    border-color: var(--colour-primary);
+    color: var(--colour-primary);
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 0.5rem;
+  }
+  
+  button {
+    background-color: var(--colour-primary);
+    color: var(--colour-background)
   }
 </style>
