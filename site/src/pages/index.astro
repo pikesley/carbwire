@@ -7,6 +7,8 @@ const dataApi = "https://carbdata.netlify.app/foods.json";
 const foods = await fetch(dataApi).then(function (response) {
   return response.json();
 });
+
+foods.sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <Layout>
@@ -25,6 +27,7 @@ const foods = await fetch(dataApi).then(function (response) {
     <button type="submit" id="submit">Submit</button>
   </form>
 
+  <h2 id="foodName"></h2>
   <dl id="results">
     <dt>Carbs per <span id="referenceAmount"></span>g:</dt>
     <dd><span id="carbsPer"></span>g</dd>
@@ -52,6 +55,8 @@ const foods = await fetch(dataApi).then(function (response) {
 
       const result = totalCarbsAndDose(data);
 
+      document.getElementById("foodName").textContent = data.name
+
       document.getElementById("referenceAmount").textContent = data.reference
       document.getElementById("carbsPer").textContent = data.carbs;
       
@@ -61,6 +66,7 @@ const foods = await fetch(dataApi).then(function (response) {
       document.getElementById("totalCarbs").textContent = result.totalCarbs
       document.getElementById("insulinDose").textContent = result.dose;
       
+      document.getElementById("foodName").style.display = "block";
       document.getElementById("results").style.display = "grid";
     });
   </script>
@@ -101,8 +107,12 @@ const foods = await fetch(dataApi).then(function (response) {
     padding: 0.2rem;
   }
 
-  dl#results {
+  h2#foodName {
+    text-align: center;
     margin-top:3rem;
+  }
+
+  dl#results {
     display: none;
 
     grid-template-columns: 1fr 1fr;
