@@ -1,4 +1,4 @@
-import { carbsPerDryGram, carbsPerPortion, dosePerPortion } from "carbwire";
+import { carbsPerDryGram, carbsPerPortion, totalCarbsAndDose } from "carbwire";
 
 const data = {
   carbs: 32.2,
@@ -21,8 +21,13 @@ describe("carbsPerPortion", function () {
   });
 });
 
-describe("dosePerPortion", function () {
+describe("totalCarbsAndDose", function () {
   it("does the reference case", function () {
-    expect(dosePerPortion(data)).toEqual(14);
+    expect(totalCarbsAndDose(data)).toEqual(
+      {
+        totalCarbs: 71.6,
+        dose: 14
+      }
+    );
   });
 });

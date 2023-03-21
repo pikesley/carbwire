@@ -1,58 +1,57 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { fields } from "../../public/js/carbwire";
 
-function buildForm(data) {
-  var s = "";
-  for (var key in data) {
-    s += "<dt>";
-    s += key;
-    s += "</dt>";
-    s += "<dd>";
-    s += '<input type="number" value="0" name="';
-    s += key;
-    s += '">';
-    s += "</dd>";
-  }
+const ratio = 5;
 
-  return s;
-}
+const dataApi = "https://carbdata.netlify.app/foods.json";
+const foods = await fetch(dataApi).then(function (response) {
+  return response.json();
+});
 ---
 
 <Layout>
-  <h1>
-    I AM NOT A DOCTOR. THIS IS NOT MEDICAL ADVICE. FOR ENTERTAINMENT PURPOSES
-    ONLY!!!
-  </h1>
   <form id="form">
-    <dl set:html={buildForm(fields)} />
+    <label for="foods">Choose a food:</label>
+    <select id="foods" name="foods">
+      {
+        foods.map((food) => (
+          <option value={JSON.stringify(food)}>{food.name}</option>
+        ))
+      }
+    </select>
+
+    <label for="dryPortion">Dry portion weight (g)</label>
+    <input type="number" name="dryPortion" />
     <button type="submit">Submit form</button>
   </form>
 
-  <div id="result"></div>
+  <table id="results">
+    <tr>
+      <th>Total carbs (g)</th>
+      <th>Dose (units)</th>
+    </tr><tr>
+      <td id="totalCarbs"></td>
+      <td id="insulinDose"></td>
+    </tr>
+  </table>
 
-  <script type="module" is:inline define:vars={{ fields: fields }}>
-    import { dosePerPortion } from "/js/carbwire.js";
+  <script type="module" is:inline define:vars={{ ratio: ratio }}>
+    import { totalCarbsAndDose } from "/js/carbwire.js";
 
     const form = document.getElementById("form");
     form.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      var result = document.getElementById("result");
-      result.innerHTML = "";
+      const data = JSON.parse(event.target[0].value);
+      data.dryPortion = Number(event.target[1].value);
+      data.ratio = ratio;
 
-      result.append(
-        "Insulin: " + dosePerPortion(asObject(event.target)) + " units"
-      );
+      const result = totalCarbsAndDose(data);
+
+      document.getElementById("totalCarbs").textContent = result.totalCarbs;
+      document.getElementById("insulinDose").textContent = result.dose;
+      document.getElementById("results").style.display = "block";
     });
-
-    function asObject(target) {
-      const refinedData = {};
-      for (var i = 0; i < event.target.length - 1; i++) {
-        refinedData[target[i].name] = target[i].value;
-      }
-      return refinedData;
-    }
   </script>
 </Layout>
 
@@ -65,5 +64,9 @@ function buildForm(data) {
 
   button {
     margin-inline: auto;
+  }
+
+  table#results {
+    display: none;
   }
 </style>
